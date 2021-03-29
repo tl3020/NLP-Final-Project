@@ -5,13 +5,14 @@ my_data <- read_csv("my_data.csv") #this is the pickle file containing all the t
 
 #group the data by date
 
-final_data <- my_data %>% group_by(date) %>% summarise(score = mean(simple, na.rm = TRUE)) #summarize sentiment scores by taking average of sentiment score of all tweets on that day. 
+final_data <- my_data %>% group_by(date) %>% summarise(simple_score = mean(simple_senti, na.rm = TRUE),
+                                                       vader_score = mean(vader_senti, na.rm = TRUE)) #summarize sentiment scores by taking average of sentiment score of all tweets on that day. 
 
 #filter financial data
 begin_date <- as.Date("2020-03-29")
 end_date <- as.Date("2020-05-14")
 
-financial_data <- read_csv("PerformanceGraphExport.csv", col_types = 
+financial_data <- read_csv("S&P Data/PerformanceGraphExport.csv", col_types = 
                              cols(
                                `Effective date` = col_date(format = "%d/%m/%Y"),
                                `S&P 500` = col_double(),
