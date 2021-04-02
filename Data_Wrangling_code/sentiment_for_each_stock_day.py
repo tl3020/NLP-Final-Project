@@ -86,3 +86,56 @@ pickle.dump(avg_senti_each_date, open("C:/Users/guoqi/Desktop/nlp_project/NLP-Fi
 pickle.dump(sp_change, open("C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/sp_500.pkl", "wb"))
 sp_change.to_csv(r'C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/sp_500.csv', index = False)
 
+
+
+
+
+
+
+
+
+
+import pandas as pd
+
+from sklearn.linear_model import LinearRegression, LogisticRegression
+
+sp_change = pickle.load(open("C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/sp_500.pkl", "rb"))
+
+#independent variables
+X = sp_change[['Vader', 'Simple']]
+
+#dependent variables
+y = sp_change['Change']
+
+#Multiple Linear Regression
+MLreg = LinearRegression().fit(X, y)
+
+#Simple Linear Regression on simple_score
+X = sp_change['Simple'].values.reshape(-1, 1)
+reg_simple = LinearRegression().fit(X, y)
+
+#Simple Linear Regression on vader_score
+X = sp_change['Vader'].values.reshape(-1, 1)
+reg_vader = LinearRegression().fit(X, y)
+
+#Logistic regression
+
+X = sp_change[['Vader', 'Simple']]
+y = y = sp_change['Binary']
+MLlogreg = LogisticRegression().fit(X, y)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
