@@ -86,5 +86,43 @@ update_data['vader_senti'] = update_data.text.apply(vader_senti)
 #pickle.dump(update_data, open("C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Data_Wrangling_code/US_Eng_tweets_with_senti.pkl", "wb"))
 
 update_data = pickle.load(open("C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Data_Wrangling_code/US_Eng_tweets_with_senti.pkl", "rb"))
+update_data.to_csv(r'C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/graphs/clean_data.csv', index = False)
+
+
+
+
+
+
+def clean_text_tokenize(text_in):
+    import re
+    from nltk.corpus import stopwords
+    import enchant
+    d = enchant.Dict("en_US")
+    sw = stopwords.words('english')
+    clean_text = re.sub('[^A-z]+', " ", text_in).lower().split()
+    clean_text = [word for word in clean_text if word not in sw]
+    clean_text = [word for word in clean_text if d.check(word)]
+    clean_text = ' '.join(clean_text)
+    return clean_text
+
+update_data['text'] = update_data['text'].apply(clean_text_tokenize)
+
+update_data.to_csv(r'C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/graphs/clean_data_1.csv', index = False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

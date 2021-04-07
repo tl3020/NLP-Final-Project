@@ -1,0 +1,208 @@
+---
+title: "Visulization"
+author: "Qianrun Guo"
+date: "2021/4/6"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(tm)
+library(SnowballC)
+library(dplyr)
+library(tidytext)
+library(wordcloud)
+library(plotrix)
+library(quanteda)
+library(ggplot2)
+library(tidytext)
+library(textdata)
+library(leaflet)
+library(tigris)
+library(forcats)
+```
+
+```{r}
+all_tweet <- read_csv("C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/graphs/clean_data_1.csv")
+head(all_tweet)
+```
+
+```{r}
+
+sample_fun = function(x,n){
+  set.seed(20201)
+  index = sample(1:nrow(x),n)
+  return(index)
+  }
+```
+```{r}
+clean_fun = function(dt){
+  final_text = c()
+  for(i in 1:nrow(dt)){
+    lower = tolower(dt$text[i])
+    no_stop = removeWords(lower, stopwords("en"))
+    no_number = removeNumbers(no_stop)
+    no_punc = removePunctuation(no_number)
+    final_text[i] = stripWhitespace(no_punc)
+  }
+  return(final_text)
+}
+```
+
+
+```{r}
+data_simple = all_tweet[all_tweet$simple_senti != 0,c('text','simple_senti')]
+data_simple$state = c(rep(NA,nrow(data_simple)))
+for(i in 1:nrow(data_simple)){
+  if(data_simple$simple_senti[i]<0){
+    data_simple$state[i] = 'negative'
+  } else {
+    data_simple$state[i] = 'positive'
+  }
+}
+```
+```{r}
+data_simple_neg = data_simple[data_simple$state == 'negative',]
+neg_index = sample_fun(data_simple_neg,5000)
+simple_neg_sample = data_simple_neg[neg_index,]
+
+data_simple_pos = data_simple[data_simple$state == 'positive',]
+pos_index = sample_fun(data_simple_pos,5000)
+simple_pos_sample = data_simple_pos[pos_index,]
+
+simple_neg = c()
+for(i in 1:nrow(simple_neg_sample)){
+  simple_neg = paste(simple_neg,simple_neg_sample$text[i])
+}
+
+simple_pos =c()
+for(i in 1:nrow(simple_pos_sample)){
+  simple_pos = paste(simple_pos,simple_pos_sample$text[i])
+}
+```
+
+```{r}
+doc_id_simple = c('positive','negative')
+
+simple_dt = data.frame('doc_id' = doc_id_simple,'text' = c(simple_pos,simple_neg))
+
+source_simple = DataframeSource(simple_dt)
+corpus_simple = VCorpus(source_simple)
+dtm_simple = DocumentTermMatrix(corpus_simple)
+m_simple = as.matrix(dtm_simple)
+
+dim(m_simple)
+```
+```{r}
+m_simple_t = t(m_simple)
+comparison.cloud(m_simple_t,colors = c('orange','blue'),
+                 scale = c(0.1,2), title.size =1,
+                 max.words = 100)
+```
+
+
+
+
+
+
+
+
+
+
+```{r}
+data_vader = all_tweet[all_tweet$vader_senti != 0, c('text','vader_senti')]
+data_vader$state = c(rep(NA,nrow(data_vader)))
+for(i in 1:nrow(data_vader)){
+  if(data_vader$vader_senti[i]<0){
+    data_vader$state[i] = 'negative'
+  } else {
+    data_vader$state[i] = 'positive'
+  }
+}
+```
+```{r}
+data_vader_neg = data_vader[data_vader$state == 'negative',]
+neg_indexv = sample_fun(data_vader_neg,5000)
+vader_neg_sample =data_vader_neg[neg_indexv,]
+
+data_vader_pos = data_vader[data_vader$state == 'positive',]
+pos_indexv = sample_fun(data_vader_pos,5000)
+vader_pos_sample = data_vader_pos[pos_indexv,]
+
+vader_neg = c()
+for(i in 1:nrow(vader_neg_sample)){
+  vader_neg = paste(vader_neg,vader_neg_sample$text[i])
+}
+
+vader_pos =c()
+for(i in 1:nrow(vader_pos_sample)){
+ vader_pos = paste(vader_pos,vader_pos_sample$text[i])
+}
+```
+
+```{r}
+doc_id_v = c('positive','negative')
+
+vader_dt = data.frame('doc_id' = doc_id_v,'text' = c(vader_pos,vader_neg))
+
+source_vader = DataframeSource(vader_dt)
+corpus_vader= VCorpus(source_vader)
+dtm_vader = DocumentTermMatrix(corpus_vader)
+m_vader = as.matrix(dtm_vader)
+
+dim(m_vader)
+```
+```{r}
+m_vader_t = t(m_vader)
+comparison.cloud(m_vader_t,colors = c('orange','blue'),
+                 scale = c(0.1,2), title.size =1,
+                 max.words = 100)
+```
+
+
+
+
+
+
+
+```{r}
+allindex = sample_fun(all_tweet,80000)
+sampleall = all_tweet[allindex,]
+doc_id_all = c(1:nrow(sampleall))
+
+all_tweet_dt = data.frame('doc_id' = doc_id_all,'text' = sampleall$text)
+
+source_all = DataframeSource(all_tweet_dt)
+corpus_all = VCorpus(source_all)
+dtm_all = DocumentTermMatrix(corpus_all)
+m_all = as.matrix(dtm_all)
+
+dim(m_all)
+```
+
+```{r}
+adt = as.data.frame(m_all)
+all = colSums(adt)
+all = data.frame('all'=all)
+all$labels = rownames(all)
+all = all[order(all[,1],decreasing = TRUE),]
+top20all = all[1:20,]
+top20all$labels = factor(top20all$labels, levels = top20all$labels)
+
+
+ggplot(top20all,aes(x = labels, y = all)) + 
+  geom_bar(stat = 'identity') +
+  coord_flip() +
+  labs(x='Words',
+       y = 'Frequency')
+```
+
+
+
+
+
+
+
+
+
+
