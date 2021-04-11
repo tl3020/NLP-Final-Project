@@ -9,29 +9,54 @@ import pandas as pd
 
 from sklearn.linear_model import LinearRegression, LogisticRegression
 
-#import complete_data.csv
+#dow30 index
 
-complete_data = pd.read_csv("complete_data.csv")
+dow = pd.read_csv("dow.csv")
 
-#independent variables
-X = complete_data[['vader_score', 'simple_score']]
+X = dow[['Simple', 'Vader']]
+y = dow['Change']
 
-#dependent variables
-y = complete_data['change']
+MLreg_dow = LinearRegression().fit(X, y)
 
-#Multiple Linear Regression
-MLreg = LinearRegression().fit(X, y)
+y = dow['Binary']
 
-#Simple Linear Regression on simple_score
-X = complete_data['simple_score'].values.reshape(-1, 1)
-reg_simple = LinearRegression().fit(X, y)
+MLlog_dow = LogisticRegression().fit(X, y)
 
-#Simple Linear Regression on vader_score
-X = complete_data['vader_score'].values.reshape(-1, 1)
-reg_vader = LinearRegression().fit(X, y)
+#nasdaq index
 
-#Logistic regression
+nasdaq = pd.read_csv("nasdaq.csv")
 
-X = complete_data[['vader_score', 'simple_score']]
-y = complete_data['Gain (Binary)']
-MLlogreg = LogisticRegression().fit(X, y)
+X = nasdaq[['Simple', 'Vader']]
+y = nasdaq['Change']
+
+MLreg_nasdaq = LinearRegression().fit(X, y)
+
+y = nasdaq['Binary']
+
+MLlog_nasdaq = LogisticRegression().fit(X, y)
+
+#russell
+
+russell = pd.read_csv("russell.csv")
+
+X = russell[['Simple', 'Vader']]
+y = russell['Change']
+
+MLreg_russell = LinearRegression().fit(X, y)
+
+y = russell['Binary']
+
+MLlog_russell = LogisticRegression().fit(X, y)
+
+#sp_500 index
+
+sp_500 = pd.read_csv("sp_500.csv")
+
+X = sp_500[['Simple', 'Vader']]
+y = sp_500['Change']
+
+MLreg_sp_500 = LinearRegression().fit(X, y)
+
+y = sp_500['Binary']
+
+MLlog_sp_500 = LogisticRegression().fit(X, y)
