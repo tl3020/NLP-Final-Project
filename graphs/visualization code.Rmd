@@ -203,6 +203,85 @@ ggplot(top20all,aes(x = labels, y = all)) +
 
 
 
+```{r}
+sp = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/sp_500.csv')
+dow = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/dow.csv')
+nasdaq = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/nasdaq.csv')
+russell = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/russell.csv')
+
+
+price = data.frame('dow' = dow$Close, 'dow_change' = dow$Change, 'nasdaq'= nasdaq$Close, 'nasdaq_change' = nasdaq$Change,'rus' = russell$Close, 'rus_change' = russell$Change)
+
+all_data = cbind(sp,price)
+```
+
+```{r}
+colors = c('Simple' = 'blue', 'Vader' = 'red')
+gsenti = ggplot(all_data,aes(x = Date)) + 
+  geom_line(aes(y = Simple, color = 'Simple'))+
+  geom_point(aes(y = Vader, color = 'Vader'), size = 3) +
+  geom_point(aes(y = Simple, color = 'Simple'), size = 3) +
+  geom_line(aes(y = Vader, color = 'Vader')) + 
+  labs(x='Date', y = 'Score',title = 'Sentiment Score for Each Stock Exchange Day',color = 'Legend')+
+  scale_color_manual(values = colors)
+  
+gsenti
+```
+
+
+```{r}
+ggplot(all_data, aes(x = Vader, y = Close)) + 
+  geom_line()+
+  geom_point() + 
+  labs(x = 'Vader Score', y = 'Index Price', titles = 'S&P500 vs. Vader Score')
+```
+
+
+```{r}
+ggplot(all_data, aes(x = Vader, y = Change)) + 
+  geom_line()+
+  geom_point() + 
+  labs(x = 'Vader Score', y = 'Index Change', titles = 'S&P500 Change vs. Vader Score')
+```
+
+
+```{r}
+ggplot(all_data, aes(x = Vader, y = dow)) + 
+  geom_line()+
+  geom_point() + 
+  labs(x = 'Vader Score', y = 'Index Price', titles = 'Dow Price vs. Vader Score')
+```
+```{r}
+ggplot(all_data, aes(x = Vader, y = dow_change)) + 
+  geom_line()+
+  geom_point() + 
+  labs(x = 'Vader Score', y = 'Index Change', titles = 'Dow Jones Change vs. Vader Score')
+```
 
 
 
+```{r}
+ggplot(all_data, aes(x = Vader, y = nasdaq)) + 
+  geom_line()+
+  geom_point() + 
+  labs(x = 'Vader Score', y = 'Index Price', titles = 'NASDAQ Price vs. Vader Score')
+```
+```{r}
+ggplot(all_data, aes(x = Vader, y = nasdaq_change)) + 
+  geom_line()+
+  geom_point() + 
+  labs(x = 'Vader Score', y = 'Index Change', titles = 'NASDAQ Change vs. Vader Score')
+```
+
+```{r}
+ggplot(all_data, aes(x = Vader, y = rus)) + 
+  geom_line()+
+  geom_point() + 
+  labs(x = 'Vader Score', y = 'Index Price', titles = 'Russell 2000 Price vs. Vader Score')
+```
+```{r}
+ggplot(all_data, aes(x = Vader, y = rus_change)) + 
+  geom_line()+
+  geom_point() + 
+  labs(x = 'Vader Score', y = 'Index Change', titles = 'Russell 2000 Change vs. Vader Score')
+```
