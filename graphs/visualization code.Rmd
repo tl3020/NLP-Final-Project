@@ -186,7 +186,7 @@ all = colSums(adt)
 all = data.frame('all'=all)
 all$labels = rownames(all)
 all = all[order(all[,1],decreasing = TRUE),]
-top20all = all[1:20,]
+top20all = all[1:10 ,]
 top20all$labels = factor(top20all$labels, levels = top20all$labels)
 
 
@@ -204,10 +204,10 @@ ggplot(top20all,aes(x = labels, y = all)) +
 
 
 ```{r}
-sp = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/sp_500.csv')
-dow = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/dow.csv')
-nasdaq = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/nasdaq.csv')
-russell = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/russell.csv')
+sp = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/Models/sp_500.csv')
+dow = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/Models/dow.csv')
+nasdaq = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/Models/nasdaq.csv')
+russell = read_csv('C:/Users/guoqi/Desktop/nlp_project/NLP-Final-Project/Modeling/Models/russell.csv')
 
 
 price = data.frame('dow' = dow$Close, 'dow_change' = dow$Change, 'nasdaq'= nasdaq$Close, 'nasdaq_change' = nasdaq$Change,'rus' = russell$Close, 'rus_change' = russell$Change)
